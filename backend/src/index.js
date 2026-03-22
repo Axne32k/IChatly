@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import { Server } from "socket.io";
 import app from "./app.js";
@@ -27,6 +30,7 @@ let server;
 server = app.listen(PORT, () => {
   logger.info(`Server is listening at ${PORT}.`);
 });
+console.log("DB:", DATABASE_URL);
 
 //socket io
 const io = new Server(server, {

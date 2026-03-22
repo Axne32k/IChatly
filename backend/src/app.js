@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
 import morgan from "morgan";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
@@ -49,7 +50,7 @@ app.use(
 //cors
 app.use(
   cors({
-    origin: "https://whatsapp-clone-frontend-liart.vercel.app",
+    origin: process.env.CLIENT_ENDPOINT,
     credentials: true,
   })
 );
