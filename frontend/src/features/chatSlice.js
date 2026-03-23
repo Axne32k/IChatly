@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+// ✅ add karo
+import API from "../utils/api";
 
-const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
-const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
+const CONVERSATION_ENDPOINT = "/conversation";
+const MESSAGE_ENDPOINT = "/message";
 
 const initialState = {
   status: "",
@@ -19,11 +20,7 @@ export const getConversations = createAsyncThunk(
   "conervsation/all",
   async (token, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(CONVERSATION_ENDPOINT, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await API.get(CONVERSATION_ENDPOINT);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -33,16 +30,11 @@ export const getConversations = createAsyncThunk(
 export const open_create_conversation = createAsyncThunk(
   "conervsation/open_create",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id, isGroup } = values;
+    const { receiver_id, isGroup } = values;
     try {
-      const { data } = await axios.post(
+      const { data } = await API.post(
         CONVERSATION_ENDPOINT,
         { receiver_id, isGroup },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
       return data;
     } catch (error) {
@@ -53,13 +45,9 @@ export const open_create_conversation = createAsyncThunk(
 export const getConversationMessages = createAsyncThunk(
   "conervsation/messages",
   async (values, { rejectWithValue }) => {
-    const { token, convo_id } = values;
+    const {  convo_id } = values;
     try {
-      const { data } = await axios.get(`${MESSAGE_ENDPOINT}/${convo_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await API.get(`${MESSAGE_ENDPOINT}/${convo_id}`);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.error.message);
@@ -69,20 +57,15 @@ export const getConversationMessages = createAsyncThunk(
 export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
-    const { token, message, convo_id, files } = values;
+    const { message, convo_id, files } = values;
     try {
-      const { data } = await axios.post(
+      const { data } = await API.post(
         MESSAGE_ENDPOINT,
         {
           message,
           convo_id,
           files,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        }, 
       );
       return data;
     } catch (error) {
@@ -93,16 +76,11 @@ export const sendMessage = createAsyncThunk(
 export const createGroupConversation = createAsyncThunk(
   "conervsation/create_group",
   async (values, { rejectWithValue }) => {
-    const { token, name, users } = values;
+    const { name, users } = values;
     try {
-      const { data } = await axios.post(
+      const { data } = await API.post(
         `${CONVERSATION_ENDPOINT}/group`,
         { name, users },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
       return data;
     } catch (error) {
