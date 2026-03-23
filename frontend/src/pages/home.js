@@ -23,6 +23,10 @@ const callData = {
   signal: "",
 };
 function Home({ socket }) {
+  const { user: currentUser } = useSelector((state) => state.user);
+
+  console.log("USER:", currentUser);
+  console.log("TOKEN:", currentUser?.token);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);

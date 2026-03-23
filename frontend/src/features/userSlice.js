@@ -3,18 +3,20 @@ import axios from "axios";
 
 const AUTH_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/auth`;
 
+const user = JSON.parse(localStorage.getItem("user")) || null;
+
 const initialState = {
   status: "",
-  error: "",
-  user: {
-    id: "",
-    name: "",
-    email: "",
-    picture: "",
-    status: "",
-    token: "",
-  },
-};
+    error: "",
+      user: user || {
+          id: "",
+              name: "",
+                  email: "",
+                      picture: "",
+                          status: "",
+                              token: "",
+                                },
+                               };
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -71,7 +73,7 @@ export const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.error = "";
-        state.user = action.payload.user;
+        state.user = action.payload.user;    
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
@@ -83,8 +85,14 @@ export const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.error = "";
-        state.user = action.payload.user;
-      })
+        state.user = {
+            ...action.payload.user,
+              token: action.payload.token,
+              };
+              // 👇 YEH LINE ADD KAR
+                localStorage.setItem("user", JSON.stringify(state.user));
+          })
+
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
